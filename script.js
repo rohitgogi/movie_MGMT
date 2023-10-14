@@ -18,36 +18,44 @@ let updateMoviesDisplay = () => {
     const movieListContainer = document.getElementById("movieList");
     movieListContainer.innerHTML = "";
 
-    const movie = allMovies[currentIndex];
-    if (movie) {
+    for (const movie of allMovies) {
         const movieDiv = document.createElement("div");
         movieDiv.classList.add("movie");
         movieDiv.innerHTML = `
-            <h2>${movie.title}</h2>
-            <p>Rating: ${movie.rating}</p>
-            <p>Have Watched: ${movie.haveWatched ? "Yes" : "No"}</p>
+            ${movie.title}, rating of ${movie.rating}, havewatched: ${movie.haveWatched ? "true" : "false"}
         `;
         movieListContainer.appendChild(movieDiv);
     }
 
     const totalMovies = document.createElement("p");
-    totalMovies.innerHTML = `Movie ${currentIndex + 1} of ${allMovies.length}`;
+    totalMovies.innerHTML = `You have ${allMovies.length} movies in total`;
     movieListContainer.appendChild(totalMovies);
 }
 
-document.getElementById("nextButton").addEventListener("click", () => {
-    if (currentIndex < allMovies.length - 1) {
-        currentIndex++;
-        updateMoviesDisplay();
+let changeWatched = (title) => {
+    for (const movie of allMovies) {
+        if (movie.title === title) {
+            movie.haveWatched = !movie.haveWatched;
+        }
     }
-});
+    updateMoviesDisplay();
+}
 
-document.getElementById("prevButton").addEventListener("click", () => {
-    if (currentIndex > 0) {
-        currentIndex--;
-        updateMoviesDisplay();
+let highRatings = (rating) => {
+    const highRatedMovies = allMovies.filter(movie => movie.rating > rating);
+    const matches = highRatedMovies.length;
+
+    for (const movie of highRatedMovies) {
+        console.log(`${movie.title} has a rating of ${movie.rating}`);
     }
-});
+
+    console.log(`In total, there are ${matches} matches`);
+}
+
+// Function to display the desired output on the web page
+let printMovies = () => {
+    updateMoviesDisplay();
+}
 
 // Test code
 let x = new Movie("Spiderman", 3, true);
@@ -56,7 +64,33 @@ let z = new Movie("Zootopia", 4.5, true);
 
 allMovies.push(x, y, z);
 
-updateMoviesDisplay();
+console.log("----------------");
+console.log("running program......");
+console.log("----------------");
+
+// Display movies and other information on the web page
+printMovies();
 
 let movie1 = new Movie("Parasite", 2, false);
+
+console.log("----------------");
 addMovie(movie1);
+console.log("----------------");
+
+// Change the watched status of a movie and display the updated list
+changeWatched("Spiderman");
+console.log("----------------");
+
+printMovies();
+
+console.log("----------------");
+
+changeWatched("Spiderman");
+console.log("----------------");
+
+printMovies();
+
+console.log("----------------");
+
+// Display movies with a rating higher than 3.5
+highRatings(3.5);
